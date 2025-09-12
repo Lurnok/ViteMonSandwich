@@ -1,0 +1,17 @@
+{
+  "name": "vitemonsandwich",
+  "version": "1.0.0",
+  "description": "Bot pour avoir un sandwich AU PLUS VITE",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lurnokus",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.22.1",
+    "dotenv": "^17.2.2",
+    "node-cron": "^4.2.1"
+  },
+  "type": "module"
+}
