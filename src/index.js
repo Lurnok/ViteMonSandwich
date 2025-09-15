@@ -62,21 +62,30 @@ client.on('clientReady', async () => {
 
             const data = await resp.json();
 
-            if (stock_empty(data)) {
-                restocked = true;
-                fs.writeFileSync('./stock.txt', new_sandwiches)
-                const channel = guild.channels.cache.get('1416167143208124566');
-                if (channel) {
-                    channel.send('<@269930271522947073> LES SANDWICHES SONT EN STOCK DEPECHE TOI');
+            if (!stock_empty(data)) {
+                const previous_sandwich = fs.readFileSync('stock.txt', 'utf8');
+                const new_sandwiches = sandwich_to_str(data);
+
+                if (previous_sandwich !== new_sandwiches) {
+                    restocked = true;
+                    fs.writeFileSync('./stock.txt', new_sandwiches)
+                    const laGuilde = client.guilds.fetch(GUILD_ID);
+                    const channel = laGuilde.channels.cache.get('1416167143208124566');
+                    if (channel) {
+                        channel.send('<@269930271522947073> LES SANDWICHES SONT EN STOCK DEPECHE TOI');
+                    }
                 }
+
+
             }
         }
     }, 60000) //Chaque minute
 })
 
-client.on('messageCreate',(message) => {
-    if(message.content === 'test test'){
-        const channel = guild.channels.cache.get('1416167143208124566');
+client.on('messageCreate', (message) => {
+    if (message.content === 'test test') {
+        const laGuilde = client.guilds.fetch(GUILD_ID);
+        const channel = laGuilde.channels.cache.get('1416167143208124566');
         channel.send('test');
     }
 })
@@ -114,7 +123,7 @@ client.on('interactionCreate', (interaction) => {
                         }
                     }).then((resp) => {
                         resp.json().then((data) => {
-                            fs.writeFileSync('./stock.txt',sandwich_to_str(data))
+                            fs.writeFileSync('./stock.txt', sandwich_to_str(data))
                             interaction.reply('Stock reset avec succès.')
                         })
                     })
