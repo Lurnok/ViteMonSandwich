@@ -69,7 +69,7 @@ client.on('clientReady', async () => {
                 if (previous_sandwich !== new_sandwiches) {
                     restocked = true;
                     fs.writeFileSync('./stock.txt', new_sandwiches)
-                    const laGuilde = client.guilds.fetch(GUILD_ID);
+                    const laGuilde = await client.guilds.fetch(GUILD_ID);
                     const channel = laGuilde.channels.cache.get('1416167143208124566');
                     if (channel) {
                         channel.send('<@269930271522947073> LES SANDWICHES SONT EN STOCK DEPECHE TOI');
@@ -82,9 +82,9 @@ client.on('clientReady', async () => {
     }, 60000) //Chaque minute
 })
 
-client.on('messageCreate', (message) => {
+client.on('messageCreate', async (message) => {
     if (message.content === 'test test') {
-        const laGuilde = client.guilds.fetch(GUILD_ID);
+        const laGuilde = await client.guilds.fetch(GUILD_ID);
         const channel = laGuilde.channels.cache.get('1416167143208124566');
         channel.send('test');
     }
@@ -102,7 +102,11 @@ client.on('interactionCreate', (interaction) => {
                         }
                     }).then((resp) => {
                         resp.json().then((data) => {
-                            interaction.reply(stock_to_str(data))
+                            if(stock_empty(data)){
+                                interaction.reply("Stock vide.")
+                            } else {
+                                interaction.reply(stock_to_str(data))
+                            } 
                         })
                     })
                 } else {
