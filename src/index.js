@@ -196,7 +196,7 @@ function set_cookies(cookies) {
 
 
 function stock_empty(data) {
-    return data.items.length === 0;
+    return data.items === null
 }
 
 main();
