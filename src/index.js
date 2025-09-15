@@ -53,20 +53,16 @@ client.on('clientReady', async () => {
         const today = new Date();
         const day = today.getDay() // 0 = dimanche, 4 = jeudi, 6 = samedi
         if (!restocked && ![0, 4, 6].includes(day) && cookies_valides) {
-            resp = await fetch(api_url, {
+            const resp = await fetch(api_url, {
                 method: 'GET',
                 headers: {
                     "Cookie": `BAR_SESS=${get_cookies()}`
                 }
             })
 
-            data = await resp.json();
+            const data = await resp.json();
 
-            new_sandwiches = sandwich_to_str(data);
-
-            previous_sandwiches = fs.readFileSync('./stock.txt', 'utf8')
-
-            if (new_sandwiches !== previous_sandwiches) {
+            if (stock_empty(data)) {
                 restocked = true;
                 fs.writeFileSync('./stock.txt', new_sandwiches)
                 const channel = guild.channels.cache.get('1416167143208124566');
@@ -76,6 +72,13 @@ client.on('clientReady', async () => {
             }
         }
     }, 60000) //Chaque minute
+})
+
+client.on('messageCreate',(message) => {
+    if(message.content === 'test test'){
+        const channel = guild.channels.cache.get('1416167143208124566');
+        channel.send('test');
+    }
 })
 
 client.on('interactionCreate', (interaction) => {
@@ -176,6 +179,11 @@ function get_cookies() {
 function set_cookies(cookies) {
     fs.writeFileSync('./cookies.txt', cookies)
     cookies_valides = true;
+}
+
+
+function stock_empty(data) {
+    return data.items.length === 0;
 }
 
 main();
