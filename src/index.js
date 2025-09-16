@@ -181,7 +181,8 @@ function stock_to_str(data) {
 
 function sandwich_to_str(data) {
     let str = data.items[0].name + '\n'
-    str += data.items[1].name + '\n'
+    if(data.items.length > 1)
+        str += data.items[1].name + '\n'
     return str
 }
 
