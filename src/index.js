@@ -175,7 +175,8 @@ async function main() {
 
 function stock_to_str(data) {
     let str = data.items[0].name + ' : ' + data.items[0].amount_left + '\n'
-    str += data.items[1].name + ' : ' + data.items[1].amount_left + '\n'
+    if(data.items.length > 1)
+        str += data.items[1].name + ' : ' + data.items[1].amount_left + '\n'
     return str
 }
 
